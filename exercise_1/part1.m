@@ -19,7 +19,7 @@ x5 = cos(2*pi*f5*k+a5); x6 = cos(2*pi*f6*k+a6);
 X = x1+x2+x3+x4+x5+x6;
 
 % =====================================================
-% 2) Estimate the powerspectrum
+% 2) Estimate the power-spectrum
 % =====================================================
 r = autocorr(X,128);
 C = abs(fft(r));
