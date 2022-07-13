@@ -7,7 +7,7 @@ The assignments consist of 4 different exercises which aim to familiarise the st
 
 The programming tasks were solved using MATLAB. In order to execute the provided scripts, you will also need to install the
 "High Order Statistics Analysis Toolbox" (HOSA Toolbox). This repository is organised in 4 folders. Every folder contains 
-MATLAB scripts, input files as well as report which presents my findings for every assignment. The reports are written in 
+MATLAB scripts, input files as well as a report which presents my findings for every assignment. The reports are written in 
 Greek, but they will probably be translated in English at some point in the near future. Other than that, this repository 
 will not be maintained and it won't receive any other updates.
 
