@@ -50,7 +50,7 @@ f = frequency axis
 
 [B7,f7] = bispecd(X,128,0,128,0.0); 
 [B8,f8] = bispeci(X,64,128,0.0,'biased',128,0); 
-[B9,f9] = bispeci(X,64,128,0.0,'biased',128,0);
+[B9,f9] = bispeci(X,64,128,0.0,'biased',128,1);
 
 % =====================================================
 % 6) Plot the new results
