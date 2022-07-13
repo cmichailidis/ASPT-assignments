@@ -28,12 +28,12 @@ f = frequency axis
 % ===================================================== 
 % 3) Estimate the bispectrum:
 % i)   direct method K=32, M=256, J=0
-% ii)  indirect method K=32, M=256, parzen window
-% iii) indirect method K=32, M=256, rectangular window
+% ii)  indirect method K=32, M=256, L=64 parzen window
+% iii) indirect method K=32, M=256, L=64 rectangular window
 % =====================================================
-B1 = bispecd(X,);
-B2 = bispeci(X,);
-B3 = bispeci(X,);
+[B1,f1] = bispecd(X,256,0,256,0.0);
+[B2,f2] = bispeci(X,64,256,0.0,'biased',256,0);
+[B3,f3] = bispeci(X,64,256,0.0,'biased',256,1);
 
 % =====================================================
 % 4) Plot the results
@@ -41,11 +41,16 @@ B3 = bispeci(X,);
 
 % =====================================================
 % 5) Repeat everything with different parameters
-% i)  K=16, M = 512
-% ii) K=64, M = 128
+% i)  K=16, M=512, L=64
+% ii) K=64, M=128, L=64
 % =====================================================
-B4 = bispecd(X); B5 = bispeci(X); B6 = bispeci(X);
-B7 = bispecd(X); B8 = bispeci(X); B9 = bispeci(X);
+[B4,f4] = bispecd(X,512,0,512,0.0); 
+[B5,f5] = bispeci(X,64,512,0.0,'biased',512,0); 
+[B6,f6] = bispeci(X,64,512,0.0,'biased',512,1);
+
+[B7,f7] = bispecd(X,128,0,128,0.0); 
+[B8,f8] = bispeci(X,64,128,0.0,'biased',128,0); 
+[B9,f9] = bispeci(X,64,128,0.0,'biased',128,0);
 
 % =====================================================
 % 6) Plot the new results
