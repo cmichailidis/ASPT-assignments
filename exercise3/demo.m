@@ -40,7 +40,7 @@ RMSE_sup  = sqrt(sum((x_sup - x).^2)/N);
 NRMSE_sup = RMSE_sup / (max(x) - min(x)); 
 
 SNR = [30, 25, 20, 15, 10, 5, 0, -5];
-M = 8
+M = 8;
 nrmse = zeros(1,M);
 
 for i = 1:1:8
