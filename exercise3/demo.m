@@ -3,7 +3,7 @@ v = exprnd(1,[1,N]));
 
 h0 = +1.00; h1 = +0.93; h2 = +0.85;
 h3 = +0.72; h4 = +0.59; h5 = -0.10; 
-h = [a0, a1, a2, a3, a4, a5];
+h = [h0, h1, h2, h3, h4, h5];
 x = conv(h,v);
 
 m = mean(v);
@@ -39,19 +39,22 @@ NRMSE_sub = RMSE_sub / (max(x) - min(x));
 RMSE_sup  = sqrt(sum((x_sup - x).^2)/N);
 NRMSE_sup = RMSE_sup / (max(x) - min(x)); 
 
-for snr = 30:-5:-5;
+SNR = [30, 25, 20, 15, 10, 5, 0, -5];
+M = 8
+nrmse = zeros(1,M);
+
+for i = 1:1:8
   n = awgn(x,snr,'measured');
-	y = x + n;
+  y = x + n;
+  q = 5;
+  k = 0:1:q;
+  c3 = cum3(y,);
 	
-	q = 5;
-	k = 0:1:q;
-	c3 = cum3(y,);
+  h_est = = c3(q,k)/c3(q,0);
+  x_est = conv(h_est,v);
 	
-	h_est = = c3(q,k)/c3(q,0);
-	x_est = conv(h_est,v);
-	
-	RMSE_est  = sqrt(sum(x_est - ).^2/N); 
-	NRMSE_est = RMSE_est / (max() - min());
-	
+  RMSE_est  = sqrt(sum(x_est - ).^2/N); 
+  NRMSE_est = RMSE_est / (max() - min());
+  nrmse[i] = NRMSE_est;
 end
 
