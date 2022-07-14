@@ -4,7 +4,7 @@ v = exprnd(1,[1,N]));
 h0 = +1.00; h1 = +0.93; h2 = +0.85;
 h3 = +0.72; h4 = +0.59; h5 = -0.10; 
 h = [h0, h1, h2, h3, h4, h5];
-x = conv(h,v);
+x = conv(v,h,'same');
 
 m = mean(v);
 s = std(v);
@@ -18,17 +18,17 @@ c3 = cum3(x,);
 q = 5;
 k = 0:1:q;
 h_est = c3(q,k)/c3(q,0);
-x_est = conv(h_est,v);
+x_est = conv(v,h_est,'same');
 
 q_sub = q-2;
 k = 0:1:q_sub;
 h_sub = c3(q_sub,k)/c3(q_sub,0);
-x_sub = conv(h_sub,v);
+x_sub = conv(v,h_sub,'same');
 
 q_sup = q+3;
 k = 0:1:q_sup;
 h_sup = c3(q_sup,k)/c3(q,0);
-x_sup = conv(h_sup,v);
+x_sup = conv(v,h_sup,'same');
 
 RMSE_est  = sqrt(sum((x_est - x).^2)/N);
 NRMSE_est = RMSE_est / (max(x) - min(x));
@@ -51,7 +51,7 @@ for i = 1:1:8
   c3 = cum3(y,);
 	
   h_est = = c3(q,k)/c3(q,0);
-  x_est = conv(h_est,v);
+  x_est = conv(v,h_est,'same');
 	
   RMSE_est  = sqrt(sum(x_est - ).^2/N); 
   NRMSE_est = RMSE_est / (max() - min());
