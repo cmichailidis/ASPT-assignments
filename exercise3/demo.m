@@ -44,8 +44,7 @@ M = 8;
 nrmse = zeros(1,M);
 
 for i = 1:1:8
-  n = awgn(x,snr,'measured');
-  y = x + n;
+  y = awgn(x,snr,'measured');
   q = 5;
   k = 0:1:q;
   c3 = cum3(y,);
@@ -55,6 +54,6 @@ for i = 1:1:8
 	
   RMSE_est  = sqrt(sum(x_est - ).^2/N); 
   NRMSE_est = RMSE_est / (max() - min());
-  nrmse[i] = NRMSE_est;
+  nrmse(i) = NRMSE_est;
 end
 
