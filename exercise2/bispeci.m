@@ -39,7 +39,7 @@ function [Bspec,waxis] = bispeci (y,nlag,nsamp, overlap,flag, nfft, wind)
     overlap = min(99, max(overlap,0));
     if (nrecs > 1)               overlap = 0;          end
     if (exist('nsamp') ~= 1)     nsamp   = ly;         end
-    if (nsamp > ly | nsamp <= 0) nsamp   = ly;         end
+    if (nsamp > ly || nsamp <= 0) nsamp   = ly;        end
     if (exist('flag') ~= 1)      flag    = 'biased';   end
     if (flag(1:1) ~= 'b')        flag    = 'unbiased'; end
     if (exist('nfft') ~= 1)      nfft    = 128;        end
@@ -126,11 +126,4 @@ end
     else
         waxis = [-(nfft-1)/2:(nfft-1)/2]/nfft;
     end
-
-%    hold off, clf
-%    contour(abs(Bspec),4,waxis,waxis), grid
-%    contour(waxis,waxis,abs(Bspec),4), grid on
-%    title('Bispectrum estimated via the indirect method')
-%    xlabel('f1'), ylabel('f2')
-%    set(gcf,'Name','Hosa BISPECI')
 return
