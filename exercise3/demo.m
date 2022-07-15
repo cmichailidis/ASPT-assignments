@@ -9,7 +9,8 @@ pkg load communications;
 
 % number of samples
 N = 2048;
-% input signal
+
+% zero-mean input signal
 v = exprnd(1,[1,N]);
 v = v - mean(v);
 
@@ -17,15 +18,15 @@ v = v - mean(v);
 h0 = +1.00; h1 = +0.93; h2 = +0.85;
 h3 = +0.72; h4 = +0.59; h5 = -0.10;
 h = [h0, h1, h2, h3, h4, h5];
+
 % output of MA-system
 x = conv(v,h,'same');
 
-% average of input signal
-m = mean(v);
 % standard deviation of input signal
 s = std(v);
+
 % skewness of input signal
-skewness = sum((v-m).^3)/((N-1)*s^3);
+skewness = sum(v.^3)/((N-1)*s^3);
 
 printf('The skewness of the input is %f\n', skewness);
 printf('\n\n');
@@ -41,10 +42,8 @@ title('Histogram of v[k]');
 % the impulse response of the MA-system
 % =========================================
 
-% Parameters for the estimation of cum3
-K=32; M=64; L=20;
 % Estimation of third order cumulant
-c3 = cum3x(x,x,x,L,M,0.0,'biased',0);
+c3 = cum3x(x,x,x,20,64,0.0,'biased',0);
 
 % estimated coefficients (assuming 5th order system)
 q = 5;
@@ -54,15 +53,21 @@ h_est = c3(k)/c3(1);
 % Reconstructed output signal
 x_est = conv(v,h_est,'same');
 
-printf('==================================');
-printf('\n');
-
+printf('=======================================\n');
 printf('Actual impulse response:\n');
-printf('h = [%f %f %f %f %f %f]\n', h(1),h(2),h(3),h(4),h(5),h(6));
+
+for i=1:6
+  printf('h[%d] = %f\n',i-1,h(i));
+end
+
 printf('\n');
 
 printf('Estimated impulse response (5th order):\n');
-printf('h = [%f %f %f %f %f %f]\n', h_est(1),h_est(2),h_est(3),h_est(4),h_est(5),h_est(6));
+
+for i=1:6
+  printf('h[%d] = %f\n',i-1,h(i));
+end
+
 printf('\n');
 
 % =========================================
@@ -86,19 +91,42 @@ h_sup = c3(k)/c3(1);
 x_sup = conv(v,h_sup,'same');
 
 printf('Sub-estimated impulse response (3rd order):\n');
-printf('h = [%f %f %f %f]\n', h_sub(1),h_sub(2),h_sub(3),h_sub(4));
+
+for i=1:4
+  printf('h[%d] = %f\n', i-1, h_sub(i));
+end
+
 printf('\n');
 
 printf('Sup-estimated impulse response (8th order):\n');
-printf('h = [%f %f %f %f %f %f %f %f %f]\n', h_sup(1),h_sup(2),h_sup(3),h_sup(4),h_sup(5),h_sup(6),h_sup(7),h_sup(8),h_sup(9));
+
+for i=1:9
+  printf('h[%d] = %f\n', i-1, h_sup(i));
+end
+
 printf('\n');
 
 figure(2);
-plot(x,'k', x_est,'r', x_sub,'g', x_sup,'b');
+plot(x,'k', x_est,'r');
 xlabel('time axis / samples');
 ylabel('MA-system output');
-title('actual output signal vs reconstructed output signals');
-legend('x[k]', 'x_{est}[k]', 'x_{sub}[k]', 'x_{sup}[k]');
+title('actual output signal vs 5th order reconstructed output');
+legend('x[k]', 'x_{est}[k]');
+
+figure(3);
+plot(x,'k', x_sub,'r');
+xlabel('time axis / samples');
+ylabel('MA-system output');
+title('actual output signal vs 3rd order reconstructed output');
+legend('x[k]', 'x_{sub}[k]');
+
+
+figure(4);
+plot(x,'k', x_sup,'r');
+xlabel('time axis / samples');
+ylabel('MA-system output');
+title('actual output signal vs 8th order reconstructed output');
+legend('x[k]', 'x_{sup}[k]');
 
 % =========================================
 % 4) Calculate some estimation metrics
@@ -106,15 +134,18 @@ legend('x[k]', 'x_{est}[k]', 'x_{sub}[k]', 'x_{sup}[k]');
 
 % RMSE and NRMSE for 5th order reconstruction
 RMSE_est  = sqrt(sum((x_est - x).^2)/N);
-NRMSE_est = RMSE_est / (max(x) - min(x));
+% NRMSE_est = RMSE_est / (max(x) - min(x));
+NRMSE_est = RMSE_est / std(x);
 
 % RMSE and NRMSE for 3rd order reconstruction
 RMSE_sub  = sqrt(sum((x_sub - x).^2)/N);
-NRMSE_sub = RMSE_sub / (max(x) - min(x));
+% NRMSE_sub = RMSE_sub / (max(x) - min(x));
+NRMSE_sub = RMSE_sub / std(x);
 
 % RMSE and NRMSE for 8th order reconstruction
 RMSE_sup  = sqrt(sum((x_sup - x).^2)/N);
-NRMSE_sup = RMSE_sup / (max(x) - min(x));
+% NRMSE_sup = RMSE_sup / (max(x) - min(x));
+NRMSE_sup = RMSE_sup / std(x);
 
 printf('==================================');
 printf('\n');
@@ -162,7 +193,8 @@ for j = 1:10
 
     % Calculate RMSE and NRMSE metrics
     RMSE_est = sqrt(sum((y_est-y).^2)/N);
-    NRMSE_est = RMSE_est / (max(y) - min(y));
+    % NRMSE_est = RMSE_est / (max(y) - min(y));
+    NRMSE_est = RMSE_est / std(y);
     nrmse(i) = nrmse(i) + 0.1*NRMSE_est;
   end
 end
