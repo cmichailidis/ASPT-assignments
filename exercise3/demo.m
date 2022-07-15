@@ -8,7 +8,7 @@ pkg load communications;
 % =========================================
 
 % number of samples
-N = 2048;
+N = 8192;
 
 % zero-mean input signal
 v = exprnd(1,[1,N]);
@@ -29,7 +29,7 @@ s = std(v);
 skewness = sum(v.^3)/((N-1)*s^3);
 
 printf('The skewness of the input is %f\n', skewness);
-printf('\n\n');
+printf('\n');
 
 figure(1);
 hist(v,32);
@@ -43,7 +43,7 @@ title('Histogram of v[k]');
 % =========================================
 
 % Estimation of third order cumulant
-c3 = cum3x(x,x,x,20,64,0.0,'biased',0);
+c3 = cum3x(x,x,x,20,256,0.0,'biased',0);
 
 % estimated coefficients (assuming 5th order system)
 q = 5;
@@ -65,7 +65,7 @@ printf('\n');
 printf('Estimated impulse response (5th order):\n');
 
 for i=1:6
-  printf('h[%d] = %f\n',i-1,h(i));
+  printf('h[%d] = %f\n',i-1,h_est(i));
 end
 
 printf('\n');
@@ -120,7 +120,6 @@ ylabel('MA-system output');
 title('actual output signal vs 3rd order reconstructed output');
 legend('x[k]', 'x_{sub}[k]');
 
-
 figure(4);
 plot(x,'k', x_sup,'r');
 xlabel('time axis / samples');
@@ -134,18 +133,15 @@ legend('x[k]', 'x_{sup}[k]');
 
 % RMSE and NRMSE for 5th order reconstruction
 RMSE_est  = sqrt(sum((x_est - x).^2)/N);
-% NRMSE_est = RMSE_est / (max(x) - min(x));
-NRMSE_est = RMSE_est / std(x);
+NRMSE_est = RMSE_est / (max(x) - min(x));
 
 % RMSE and NRMSE for 3rd order reconstruction
 RMSE_sub  = sqrt(sum((x_sub - x).^2)/N);
-% NRMSE_sub = RMSE_sub / (max(x) - min(x));
-NRMSE_sub = RMSE_sub / std(x);
+NRMSE_sub = RMSE_sub / (max(x) - min(x));
 
 % RMSE and NRMSE for 8th order reconstruction
 RMSE_sup  = sqrt(sum((x_sup - x).^2)/N);
-% NRMSE_sup = RMSE_sup / (max(x) - min(x));
-NRMSE_sup = RMSE_sup / std(x);
+NRMSE_sup = RMSE_sup / (max(x) - min(x));
 
 printf('==================================');
 printf('\n');
@@ -183,7 +179,7 @@ for j = 1:10
 
     % apply Giannakis' Formula to
     % reconstruct the impulse response
-    c3 = cum3x(y,y,y,20,64,0.0,'biased',0);
+    c3 = cum3x(y,y,y,20,256,0.0,'biased',0);
     q = 5;
     k = 1:1:(q+1);
     h_est = c3(k)/c3(1);
@@ -193,14 +189,13 @@ for j = 1:10
 
     % Calculate RMSE and NRMSE metrics
     RMSE_est = sqrt(sum((y_est-y).^2)/N);
-    % NRMSE_est = RMSE_est / (max(y) - min(y));
-    NRMSE_est = RMSE_est / std(y);
-    nrmse(i) = nrmse(i) + 0.1*NRMSE_est;
+    NRMSE_est = RMSE_est / (max(y) - min(y));
+    nrmse(i) = nrmse(i) + NRMSE_est / 10;
   end
 end
 
-figure(3);
-plot(SNR, nrmse, 'linestyle','--', 'marker','o', 'markerfacecolor', 'r');
+figure(5);
+plot(SNR, log10(nrmse), 'linestyle','--', 'marker','o', 'markerfacecolor', 'r');
 xlabel('Signal to Noise Ratio in dB');
-ylabel('NRMSE');
+ylabel('NRMSE in log10 scale');
 title('Normalised Root Mean Square Error vs Noise Level (average of 10 realizations)');
