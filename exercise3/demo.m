@@ -1,59 +1,174 @@
-N = 2048;
-v = exprnd(1,[1,N]));
+clear; clc;
+pkg load signal;
+pkg load statistics;
+pkg load communications;
 
+% =========================================
+% 1) Construct v[k] and x[k]
+% =========================================
+
+% number of samples
+N = 2048;
+% input signal
+v = exprnd(1,[1,N]);
+v = v - mean(v);
+
+% coefficients of MA system
 h0 = +1.00; h1 = +0.93; h2 = +0.85;
-h3 = +0.72; h4 = +0.59; h5 = -0.10; 
+h3 = +0.72; h4 = +0.59; h5 = -0.10;
 h = [h0, h1, h2, h3, h4, h5];
+% output of MA-system
 x = conv(v,h,'same');
 
+% average of input signal
 m = mean(v);
+% standard deviation of input signal
 s = std(v);
-skewness = sum((v-m).^3)/((N-1)*s);
+% skewness of input signal
+skewness = sum((v-m).^3)/((N-1)*s^3);
 
-K=32;
-M=64;
-L=20;
-c3 = cum3(x,);
+printf('The skewness of the input is %f\n', skewness);
+printf('\n\n');
 
+figure(1);
+hist(v,32);
+xlabel('Input signal v[k]');
+ylabel('Frequency');
+title('Histogram of v[k]');
+
+% =========================================
+% 2) Apply Giannakis' Formula to estimate
+% the impulse response of the MA-system
+% =========================================
+
+% Parameters for the estimation of cum3
+K=32; M=64; L=20;
+% Estimation of third order cumulant
+c3 = cum3x(x,x,x,L,M,0.0,'biased',0);
+
+% estimated coefficients (assuming 5th order system)
 q = 5;
-k = 0:1:q;
-h_est = c3(q,k)/c3(q,0);
+k = 1:1:(q+1);
+h_est = c3(k)/c3(1);
+
+% Reconstructed output signal
 x_est = conv(v,h_est,'same');
 
+printf('==================================');
+printf('\n');
+
+printf('Actual impulse response:\n');
+printf('h = [%f %f %f %f %f %f]\n', h(1),h(2),h(3),h(4),h(5),h(6));
+printf('\n');
+
+printf('Estimated impulse response (5th order):\n');
+printf('h = [%f %f %f %f %f %f]\n', h_est(1),h_est(2),h_est(3),h_est(4),h_est(5),h_est(6));
+printf('\n');
+
+% =========================================
+% 3)
+% sub-estimation: (3rd order system)
+% sup-estimation: (8th order system)
+% =========================================
+
+% estimated coefficients and reconstructed
+% output (assuming 3rd order MA-system)
 q_sub = q-2;
-k = 0:1:q_sub;
-h_sub = c3(q_sub,k)/c3(q_sub,0);
+k = 1:1:(q_sub+1);
+h_sub = c3(k)/c3(1);
 x_sub = conv(v,h_sub,'same');
 
+% estimated coefficients and reconstructed
+% output (assuming 8th order MA-system)
 q_sup = q+3;
-k = 0:1:q_sup;
-h_sup = c3(q_sup,k)/c3(q,0);
+k = 1:1:(q_sup+1);
+h_sup = c3(k)/c3(1);
 x_sup = conv(v,h_sup,'same');
 
+printf('Sub-estimated impulse response (3rd order):\n');
+printf('h = [%f %f %f %f]\n', h_sub(1),h_sub(2),h_sub(3),h_sub(4));
+printf('\n');
+
+printf('Sup-estimated impulse response (8th order):\n');
+printf('h = [%f %f %f %f %f %f %f %f %f]\n', h_sup(1),h_sup(2),h_sup(3),h_sup(4),h_sup(5),h_sup(6),h_sup(7),h_sup(8),h_sup(9));
+printf('\n');
+
+figure(2);
+plot(x,'k', x_est,'r', x_sub,'g', x_sup,'b');
+xlabel('time axis / samples');
+ylabel('MA-system output');
+title('actual output signal vs reconstructed output signals');
+legend('x[k]', 'x_{est}[k]', 'x_{sub}[k]', 'x_{sup}[k]');
+
+% =========================================
+% 4) Calculate some estimation metrics
+% =========================================
+
+% RMSE and NRMSE for 5th order reconstruction
 RMSE_est  = sqrt(sum((x_est - x).^2)/N);
 NRMSE_est = RMSE_est / (max(x) - min(x));
 
+% RMSE and NRMSE for 3rd order reconstruction
 RMSE_sub  = sqrt(sum((x_sub - x).^2)/N);
 NRMSE_sub = RMSE_sub / (max(x) - min(x));
 
+% RMSE and NRMSE for 8th order reconstruction
 RMSE_sup  = sqrt(sum((x_sup - x).^2)/N);
-NRMSE_sup = RMSE_sup / (max(x) - min(x)); 
+NRMSE_sup = RMSE_sup / (max(x) - min(x));
 
+printf('==================================');
+printf('\n');
+
+printf('evaluation metrics for 5th order reconstruction\n');
+printf('RMSE = %f\n', RMSE_est);
+printf('NRMSE = %f\n', NRMSE_est);
+
+printf('evaluation metrics for 3rd order reconstruction\n');
+printf('RMSE = %f\n', RMSE_sub);
+printf('NRMSE = %f\n', NRMSE_sub);
+
+printf('evaluation metrics for 8th order reconstruction\n');
+printf('RMSE = %f\n', RMSE_sup');
+printf('NRMSE = %f\n', NRMSE_sup);
+
+% =========================================
+% 5) Effect of additive gaussian noise
+% on impulse response estimation and output
+% signal reconstruction
+% =========================================
+
+% list for different noise levels (in dB)
 SNR = [30, 25, 20, 15, 10, 5, 0, -5];
-M = 8;
+M = length(SNR);
+
+% list for NRMSE at every different noise level
 nrmse = zeros(1,M);
 
-for i = 1:1:8
-  y = awgn(x,snr,'measured');
-  q = 5;
-  k = 0:1:q;
-  c3 = cum3(y,);
-	
-  h_est = = c3(q,k)/c3(q,0);
-  x_est = conv(v,h_est,'same');
-	
-  RMSE_est  = sqrt(sum(x_est - ).^2/N); 
-  NRMSE_est = RMSE_est / (max() - min());
-  nrmse(i) = NRMSE_est;
+for j = 1:10
+  for i = 1:M
+    % contaminate the output signal
+    % with additive gaussian noise
+    y = awgn(x,SNR(i),'measured');
+
+    % apply Giannakis' Formula to
+    % reconstruct the impulse response
+    c3 = cum3x(y,y,y,20,64,0.0,'biased',0);
+    q = 5;
+    k = 1:1:(q+1);
+    h_est = c3(k)/c3(1);
+
+    % Estimate the output of the system
+    y_est = conv(v,h_est,'same');
+
+    % Calculate RMSE and NRMSE metrics
+    RMSE_est = sqrt(sum((y_est-y).^2)/N);
+    NRMSE_est = RMSE_est / (max(y) - min(y));
+    nrmse(i) = nrmse(i) + 0.1*NRMSE_est;
+  end
 end
 
+figure(3);
+plot(SNR, nrmse, 'linestyle','--', 'marker','o', 'markerfacecolor', 'r');
+xlabel('Signal to Noise Ratio in dB');
+ylabel('NRMSE');
+title('Normalised Root Mean Square Error vs Noise Level (average of 10 realizations)');
