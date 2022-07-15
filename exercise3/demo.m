@@ -8,7 +8,7 @@ pkg load communications;
 % =========================================
 
 % number of samples
-N = 8192;
+N = 2048;
 
 % zero-mean input signal
 v = exprnd(1,[1,N]);
@@ -198,4 +198,4 @@ figure(5);
 plot(SNR, log10(nrmse), 'linestyle','--', 'marker','o', 'markerfacecolor', 'r');
 xlabel('Signal to Noise Ratio in dB');
 ylabel('NRMSE in log10 scale');
-title('Normalised Root Mean Square Error vs Noise Level (average of 10 realizations)');
+title('NRMSE vs SNR (average of 10 realizations)');
