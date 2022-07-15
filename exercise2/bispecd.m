@@ -46,7 +46,7 @@ function [Bspec,waxis] = bispecd (y,  nfft, wind, nsamp, overlap)
     if (exist('nsamp') ~= 1)          nsamp = 0;   end
     if (nrecs > 1)                    nsamp = ly;  end
 
-    if (nrecs == 1 & nsamp <= 0)
+    if (nrecs == 1 && nsamp <= 0)
        nsamp = fix(ly/ (8 - 7 * overlap/100));
     end
     if (nfft  < nsamp)   nfft = 2^nextpow2(nsamp); end
@@ -146,11 +146,4 @@ function [Bspec,waxis] = bispecd (y,  nfft, wind, nsamp, overlap)
    else
        waxis = [-(nfft-1)/2:(nfft-1)/2]'/nfft;
    end
-
-%   hold off, clf
-%   contour(abs(Bspec),4,waxis,waxis),grid
-%   contour(waxis,waxis,abs(Bspec),4),grid on
-%   title('Bispectrum estimated via the direct (FFT) method')
-%   xlabel('f1'), ylabel('f2')
-%   set(gcf,'Name','Hosa BISPECD')
 return
