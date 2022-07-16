@@ -22,11 +22,14 @@ h = [h0, h1, h2, h3, h4, h5];
 % output of MA-system
 x = conv(v,h,'same');
 
+% average of input signal
+m = mean(v);
+
 % standard deviation of input signal
 s = std(v);
 
 % skewness of input signal
-skewness = sum(v.^3)/((N-1)*s^3);
+skewness = sum((v-m).^3)/((N-1)*s^3);
 
 printf('The skewness of the input is %f\n', skewness);
 printf('\n');
@@ -42,12 +45,10 @@ title('Histogram of v[k]');
 % the impulse response of the MA-system
 % =========================================
 
-% Estimation of third order cumulant
-c3 = cum3x(x,x,x,20,256,0.0,'biased',0);
-
 % estimated coefficients (assuming 5th order system)
 q = 5;
 k = 1:1:(q+1);
+c3 = cum3x(x,x,x,20,256,0.0,'biased',q);
 h_est = c3(k)/c3(1);
 
 % Reconstructed output signal
@@ -80,6 +81,7 @@ printf('\n');
 % output (assuming 3rd order MA-system)
 q_sub = q-2;
 k = 1:1:(q_sub+1);
+c3 = cum3x(x,x,x,20,256,0.0,'biased',q_sub);
 h_sub = c3(k)/c3(1);
 x_sub = conv(v,h_sub,'same');
 
@@ -88,6 +90,7 @@ x_sub = conv(v,h_sub,'same');
 q_sup = q+3;
 k = 1:1:(q_sup+1);
 h_sup = c3(k)/c3(1);
+c3 = cum3x(x,x,x,20,256,0.0,'biased',q_sup);
 x_sup = conv(v,h_sup,'same');
 
 printf('Sub-estimated impulse response (3rd order):\n');
@@ -179,9 +182,9 @@ for j = 1:10
 
     % apply Giannakis' Formula to
     % reconstruct the impulse response
-    c3 = cum3x(y,y,y,20,256,0.0,'biased',0);
     q = 5;
     k = 1:1:(q+1);
+    c3 = cum3x(y,y,y,20,256,0.0,'biased',q);
     h_est = c3(k)/c3(1);
 
     % Estimate the output of the system
