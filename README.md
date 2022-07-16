@@ -19,4 +19,7 @@ with Octave instead of MATLAB.
 The repository is organised in 4 folders. Every folder contains Octave scripts, input files as well as a
 report which presents my findings for every assignment. The reports are written in Greek, but they will 
 probably be translated in English at some point in the near future. That being said, this repository will 
-not be maintained and it won't receive any other updates.
+not be maintained and it won't receive any further updates. Therefore, I cannot guarantee that those scripts
+will remain compatible with future versions of Octave. At the time of writing this, the latest stable 
+release of Octave is 7.1.0. Make sure that you use the same version or at least one that is backwards
+compatible with 7.1.0
