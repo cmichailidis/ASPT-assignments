@@ -56,7 +56,7 @@ f = linspace(-0.5,+0.5,257);
 % =====================================================
 
 % number of levels in contour plots
-n = 16;
+n = 32;
 
 % Power Spectrum Plot
 figure(1);
@@ -68,21 +68,21 @@ set(gcf,'Name', 'PSD');
 
 % Bispectrum Plot for direct estimator
 figure(2);
-contour(w1,w1,abs(B1),n); grid on;
+contourf(w1,w1,abs(B1),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, direct method, K=32, M=256, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECD');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
 figure(3);
-contour(w2,w2,abs(B2),n); grid on;
+contourf(w2,w2,abs(B2),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, indirect method, K=32, M=256, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
 figure(4);
-contour(w3,w3,abs(B3),n); grid on;
+contourf(w3,w3,abs(B3),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, indirect method, K=32, M=256, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
@@ -112,46 +112,46 @@ set(gcf,'Name','Hosa BISPECI');
 % =====================================================
 
 % number of levels on contour plots
-n = 16;
+n = 32;
 
 % Bispectrum Plot for direct estimator
 figure(5);
-contour(w4,w4,abs(B4),n); grid on;
+contourf(w4,w4,abs(B4),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, direct method, K=16, M=512, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECD');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
 figure(6);
-contour(w5,w5,abs(B5),n); grid on;
+contourf(w5,w5,abs(B5),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, indirect method, K=16, M=512, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
 % Bispectrum Plot for indirect estimator and Rectangular Window
 figure(7);
-contour(w6,w6,abs(B6),n); grid on;
+contourf(w6,w6,abs(B6),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, indirect method, K=16, M=512, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
 % Bispectrum Plot for direct estimator
 figure(8);
-contour(w7,w7,abs(B7),n); grid on;
+contourf(w7,w7,abs(B7),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, direct method, K=64, M=128, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECD');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
 figure(9);
-contour(w8,w8,abs(B8),n); grid on;
+contourf(w8,w8,abs(B8),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, indirect method, K=64, M=128, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
 % Bispectrum Plot for indirect estimator and Rectangular Window
 figure(10);
-contour(w9,w9,abs(B9),n); grid on;
+contourf(w9,w9,abs(B9),n,'LineColor','none'); grid on; colorbar;
 title('Bispectrum, indirect method, K=64, M=128, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
