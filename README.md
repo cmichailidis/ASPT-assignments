@@ -21,5 +21,5 @@ report which presents my findings for every assignment. The reports are written 
 probably be translated in English at some point in the near future. That being said, this repository will 
 not be maintained and it won't receive any further updates. Therefore, I cannot guarantee that those scripts
 will remain compatible with future versions of Octave. At the time of writing this, the latest stable 
-release of Octave is 7.1.0. Make sure that you use the same version or at least one that is backwards
+release of Octave is 7.1.0. Make sure that to use the same version or at least one that is backwards
 compatible with 7.1.0
