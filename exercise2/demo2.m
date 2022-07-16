@@ -76,7 +76,7 @@ title('Bispectrum, average of 50, indirect method, K=32, M=256, L=64, Parzen Win
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
-% Bispectrum Plot for indirect estimator and Parzen Window
+% Bispectrum Plot for indirect estimator and Rectangular Window
 figure(14);
 contour(w3,w3,abs(B3),n); grid on;
 title('Bispectrum, average of 50, indirect method, K=32, M=256, L=64, Rectangular Window');
