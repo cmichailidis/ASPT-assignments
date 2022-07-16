@@ -1,5 +1,6 @@
-clear; clc;
+clear all; clc;
 pkg load signal;
+pkg load image;
 
 % frequency components
 f1 = 0.12; f2 = 0.30; f3 = f1+f2;
@@ -16,14 +17,10 @@ C  = zeros(1,257);
 B1 = zeros(256,256);
 B2 = zeros(256,256);
 B3 = zeros(256,256);
-
 f  = linspace(-0.5, +0.5, 257);
-w1 = linspace(-0.5, +0.5, 256);
-w2 = linspace(-0.5, +0.5, 256);
-w3 = linspace(-0.5, +0.5, 256);
 
 % estimate bispectra by averaging 50 realizations of X[k]
-for i=1:1:50
+for i=1:1:10
   % progress bar
   printf('iteration %d out of 50\n', i);
 
@@ -62,24 +59,41 @@ set(gcf,'Name', 'PSD');
 % number of levels in contour plots
 n = 16;
 
+% compression factor for logarithmic color scale
+r = 10;
+
 % Bispectrum Plot for direct estimator
 figure(12);
-contour(w1,w1,abs(B1),n); grid on;
-title('Bispectrum, average of 50, direct method, K=32, M=256, J=0');
+C1 = abs(B1) / max(abs(B1(:)));
+C1 = log(1+r*C1);
+C1 = imresize(C1,4,'bicubic');
+[m,n] = size(C1);
+f = linspace(-0.5,+0.5,n);
+imagesc(f,f,C1); colorbar; grid on;
+title('Bispectrum, direct method, Average of 50, K=32, M=256, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECD');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
 figure(13);
-contour(w2,w2,abs(B2),n); grid on;
-title('Bispectrum, average of 50, indirect method, K=32, M=256, L=64, Parzen Window');
+C2 = abs(B2) / max(abs(B2(:)));
+C2 = log(1+r*C2);
+C2 = imresize(C2,4,'bicubic');
+[m,n] = size(C2);
+f = linspace(-0.5,+0.5,n);
+imagesc(f,f,C2); colorbar; grid on;
+title('Bispectrum, indirect method, Average of 50, K=32, M=256, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
-% Bispectrum Plot for indirect estimator and Rectangular Window
+% Bispectrum Plot for indirect estimator and Parzen Window
 figure(14);
-contour(w3,w3,abs(B3),n); grid on;
-title('Bispectrum, average of 50, indirect method, K=32, M=256, L=64, Rectangular Window');
+C3 = abs(B3) / max(abs(B3(:)));
+C3 = log(1+r*C3);
+C3 = imresize(C3,4,'bicubic');
+[m,n] = size(C3);
+f = linspace(-0.5,+0.5,n);
+imagesc(f,f,C3); colorbar; grid on;
+title('Bispectrum, indirect method, Average of 50, K=32, M=256, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
-
