@@ -49,21 +49,18 @@ for i=1:1:10
 end
 
 % Power spectrum plot
-figure(11);
+figure(13);
 plot(f,C); grid on;
 title('Power spectrum, average of 50, L=128');
 xlabel('frequency in Hz');
 ylabel('Power Spectral Density');
 set(gcf,'Name', 'PSD');
 
-% number of levels in contour plots
-n = 16;
-
 % compression factor for logarithmic color scale
-r = 10;
+r = 30;
 
 % Bispectrum Plot for direct estimator
-figure(12);
+figure(14);
 C1 = abs(B1) / max(abs(B1(:)));
 C1 = log(1+r*C1);
 C1 = imresize(C1,4,'bicubic');
@@ -75,7 +72,7 @@ xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECD');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
-figure(13);
+figure(15);
 C2 = abs(B2) / max(abs(B2(:)));
 C2 = log(1+r*C2);
 C2 = imresize(C2,4,'bicubic');
@@ -87,7 +84,7 @@ xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
 
 % Bispectrum Plot for indirect estimator and Parzen Window
-figure(14);
+figure(16);
 C3 = abs(B3) / max(abs(B3(:)));
 C3 = log(1+r*C3);
 C3 = imresize(C3,4,'bicubic');

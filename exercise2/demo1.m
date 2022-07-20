@@ -55,9 +55,6 @@ B3 = bispeci(X,64,256,0.0,'biased',256,1);
 % 4) Plot the results
 % =====================================================
 
-% compression factor for logarithmic scale
-r = 10;
-
 % Power Spectrum Plot
 figure(1);
 plot(f,C); grid on;
@@ -66,13 +63,16 @@ xlabel('frequency in Hz');
 ylabel('Power Spectral Density');
 set(gcf,'Name', 'PSD');
 
+% compression factor for logarithmic scale
+r = 30;
+% frequency axis for bispectra
+f = linspace(-0.5,+0.5,1024);
+
 % Bispectrum Plot for direct estimator
 figure(2);
 C1 = abs(B1) / max(abs(B1(:)));
 C1 = log(1+r*C1);
 C1 = imresize(C1,4,'bicubic');
-[m,n] = size(C1);
-f = linspace(-0.5,+0.5,n);
 imagesc(f,f,C1); colorbar; grid on;
 title('Bispectrum, direct method, K=32, M=256, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -83,8 +83,6 @@ figure(3);
 C2 = abs(B2) / max(abs(B2(:)));
 C2 = log(1+r*C2);
 C2 = imresize(C2,4,'bicubic');
-[m,n] = size(C2);
-f = linspace(-0.5,+0.5,n);
 imagesc(f,f,C2); colorbar; grid on;
 title('Bispectrum, indirect method, K=32, M=256, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -95,8 +93,6 @@ figure(4);
 C3 = abs(B3) / max(abs(B3(:)));
 C3 = log(1+r*C3);
 C3 = imresize(C3,4,'bicubic');
-[m,n] = size(C3);
-f = linspace(-0.5,+0.5,n);
 imagesc(f,f,C3); colorbar; grid on;
 title('Bispectrum, indirect method, K=32, M=256, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -119,9 +115,7 @@ B6 = bispeci(X,64,512,0.0,'biased',512,1);
 figure(5);
 C4 = abs(B4) / max(abs(B4(:)));
 C4 = log(1+r*C4);
-C4 = imresize(C4,4,'bicubic');
-[m,n] = size(C4);
-f = linspace(-0.5,+0.5,n);
+C4 = imresize(C4,2,'bicubic');
 imagesc(f,f,C4); colorbar; grid on;
 title('Bispectrum, direct method, K=16, M=512, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -131,9 +125,7 @@ set(gcf,'Name','Hosa BISPECD');
 figure(6);
 C5 = abs(B5) / max(abs(B5(:)));
 C5 = log(1+r*C5);
-C5 = imresize(C5,4,'bicubic');
-[m,n] = size(C5);
-f = linspace(-0.5,+0.5,n);
+C5 = imresize(C5,2,'bicubic');
 imagesc(f,f,C5); colorbar; grid on;
 title('Bispectrum, indirect method, K=16, M=512, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -143,9 +135,7 @@ set(gcf,'Name','Hosa BISPECI');
 figure(7);
 C6 = abs(B6) / max(abs(B6(:)));
 C6 = log(1+r*C6);
-C6 = imresize(C6,4,'bicubic');
-[m,n] = size(C6);
-f = linspace(-0.5,+0.5,n);
+C6 = imresize(C6,2,'bicubic');
 imagesc(f,f,C6); colorbar; grid on;
 title('Bispectrum, indirect method, K=16, M=512, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -162,9 +152,7 @@ B9 = bispeci(X,64,128,0.0,'biased',128,1);
 figure(8);
 C7 = abs(B7) / max(abs(B7(:)));
 C7 = log(1+r*C7);
-C7 = imresize(C7,4,'bicubic');
-[m,n] = size(C7);
-f = linspace(-0.5,+0.5,n);
+C7 = imresize(C7,8,'bicubic');
 imagesc(f,f,C7); colorbar; grid on;
 title('Bispectrum, direct method, K=64, M=128, J=0');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -174,9 +162,7 @@ set(gcf,'Name','Hosa BISPECD');
 figure(9);
 C8 = abs(B8) / max(abs(B8(:)));
 C8 = log(1+r*C8);
-C8 = imresize(C8,4,'bicubic');
-[m,n] = size(C8);
-f = linspace(-0.5,+0.5,n);
+C8 = imresize(C8,8,'bicubic');
 imagesc(f,f,C8); colorbar; grid on;
 title('Bispectrum, indirect method, K=64, M=128, L=64, Parzen Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
@@ -186,10 +172,64 @@ set(gcf,'Name','Hosa BISPECI');
 figure(10);
 C9 = abs(B9) / max(abs(B9(:)));
 C9 = log(1+r*C9);
-C9 = imresize(C9,4,'bicubic');
-[m,n] = size(C9);
-f = linspace(-0.5,+0.5,n);
+C9 = imresize(C9,8,'bicubic');
 imagesc(f,f,C9); colorbar; grid on;
 title('Bispectrum, indirect method, K=64, M=128, L=64, Rectangular Window');
 xlabel('f_1(Hz)'); ylabel('f_2(Hz)');
 set(gcf,'Name','Hosa BISPECI');
+
+% Effect of Window Function
+figure(11);
+% --------------------------
+subplot(1,2,1);
+imagesc(f,f,C5);
+title('Parzen window');
+axis equal;
+% --------------------------
+subplot(1,2,2);
+imagesc(f,f,C6);
+title('Rectangular window');
+axis equal;
+% --------------------------
+set(gcf, 'Name', 'Parzen vs Rectangular Window');
+
+% Effect of Partition Size
+figure(12);
+% --------------------------
+subplot(3,3,1);
+imagesc(f,f,C6);
+title('K=16, Rectangular');
+% --------------------------
+subplot(3,3,4);
+imagesc(f,f,C3);
+title('K=32, Rectangular');
+% --------------------------
+subplot(3,3,7);
+imagesc(f,f,C9);
+title('K=64, Rectangular');
+% --------------------------
+subplot(3,3,2);
+imagesc(f,f,C5);
+title('K=16, Parzen');
+% --------------------------
+subplot(3,3,5);
+imagesc(f,f,C2);
+title('K=32, Parzen');
+% --------------------------
+subplot(3,3,8);
+imagesc(f,f,C8);
+title('K=64, Parzen');
+% --------------------------
+subplot(3,3,3);
+imagesc(f,f,C4);
+title('K=16, Direct');
+% --------------------------
+subplot(3,3,6);
+imagesc(f,f,C1);
+title('K=32, Direct');
+% --------------------------
+subplot(3,3,9);
+imagesc(f,f,C7);
+title('K=64, Direct');
+% --------------------------
+set(gcf, 'Name', 'Effect of Partition Size');
