@@ -20,7 +20,7 @@ B3 = zeros(256,256);
 f  = linspace(-0.5, +0.5, 257);
 
 % estimate bispectra by averaging 50 realizations of X[k]
-for i=1:1:10
+for i=1:1:50
   % progress bar
   printf('iteration %d out of 50\n', i);
 
