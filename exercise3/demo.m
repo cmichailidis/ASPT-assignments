@@ -11,8 +11,8 @@ pkg load communications;
 N = 2048;
 
 % zero-mean input signal
-v = exprnd(1,[1,N]);
-v = v - mean(v);
+load data; m = mean(z);
+v = z - m;
 
 % coefficients of MA system
 h0 = +1.00; h1 = +0.93; h2 = +0.85;
@@ -22,20 +22,17 @@ h = [h0, h1, h2, h3, h4, h5];
 % output of MA-system
 x = conv(v,h,'same');
 
-% average of input signal
-m = mean(v);
-
 % standard deviation of input signal
 s = std(v);
 
 % skewness of input signal
-skewness = sum((v-m).^3)/((N-1)*s^3);
+skewness = sum((z-m).^3)/((N-1)*s^3);
 
 printf('The skewness of the input is %f\n', skewness);
 printf('\n');
 
 figure(1);
-hist(v,32);
+hist(z,32);
 xlabel('Input signal v[k]');
 ylabel('Frequency');
 title('Histogram of v[k]');
@@ -174,7 +171,9 @@ M = length(SNR);
 % list for NRMSE at every different noise level
 nrmse = zeros(1,M);
 
-for j = 1:10
+iter = 20;
+
+for j = 1:iter
   for i = 1:M
     % contaminate the output signal
     % with additive gaussian noise
@@ -193,7 +192,7 @@ for j = 1:10
     % Calculate RMSE and NRMSE metrics
     RMSE_est = sqrt(sum((y_est-y).^2)/N);
     NRMSE_est = RMSE_est / (max(y) - min(y));
-    nrmse(i) = nrmse(i) + NRMSE_est / 10;
+    nrmse(i) = nrmse(i) + NRMSE_est / iter;
   end
 end
 
